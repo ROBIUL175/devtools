@@ -1,0 +1,919 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ISP User Manager — Full (Offline)</title>
+<style>
+  :root {
+    --bg: #f3f6fb;
+    --card: #fff;
+    --text: #0b1220;
+    --muted: #556;
+    --accent: #0b6ef6;
+    --good: #0b9b4a;
+    --bad: #d0312d;
+    --glass: rgba(11, 110, 246, 0.08);
+  }
+
+  [data-theme="dark"] {
+    --bg: #091026;
+    --card: #071226;
+    --text: #eaf2ff;
+    --muted: #9fb3d4;
+    --accent: #4ea8ff;
+    --good: #79e0a8;
+    --bad: #ff9b9b;
+    --glass: rgba(255, 255, 255, 0.03);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Inter, "Segoe UI", Roboto, Arial;
+    margin: 0;
+    padding: 18px;
+    background: var(--bg);
+    color: var(--text);
+    transition: all 0.3s ease;
+  }
+
+  .wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 20px;
+  }
+
+  .controls {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .card {
+    background: var(--card);
+    padding: 12px;
+    border-radius: 10px;
+    box-shadow: 0 6px 18px rgba(2, 10, 30, 0.06);
+    margin-bottom: 12px;
+    transition: all 0.3s ease;
+  }
+
+  .row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  input[type="text"],
+  input[type="date"],
+  input[type="month"],
+  select {
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #e6eef8;
+    background: var(--card);
+    color: var(--text);
+    min-width: 120px;
+    font-family: inherit;
+  }
+
+  .btn {
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: none;
+    background: var(--accent);
+    color: white;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.3s ease;
+  }
+
+  .btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  .btn.ghost {
+    background: transparent;
+    color: var(--accent);
+    border: 1px solid rgba(11, 110, 246, 0.12);
+  }
+
+  .btn.warn {
+    background: var(--bad);
+  }
+
+  .btn.good {
+    background: var(--good);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+  }
+
+  th,
+  td {
+    padding: 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    text-align: left;
+    font-size: 14px;
+  }
+
+  thead th {
+    background: transparent;
+    color: var(--muted);
+    font-weight: 700;
+  }
+
+  tbody tr {
+    transition: all 0.12s ease;
+    border-radius: 8px;
+  }
+
+  tbody tr:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(2, 10, 30, 0.1);
+  }
+
+  .small {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .flex {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .spacer {
+    flex: 1;
+  }
+
+  .toggle {
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: none;
+    font-family: inherit;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .toggle.active {
+    background: var(--good);
+    color: white;
+  }
+
+  .toggle.inactive {
+    background: var(--bad);
+    color: white;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+  }
+
+  .actionBtn {
+    padding: 6px 8px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .actionBtn.edit {
+    background: #ffdede;
+    color: #333;
+  }
+
+  .actionBtn.del {
+    background: #ffdddd;
+    color: #333;
+  }
+
+  .search {
+    min-width: 220px;
+  }
+
+  .month {
+    min-width: 160px;
+  }
+
+  .bulkBtns {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .auto-reset-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    background: var(--glass);
+    border-radius: 8px;
+    margin-top: 8px;
+  }
+
+  .reset-info {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  @media (max-width: 900px) {
+    .row {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .controls {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .search {
+      width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>📡 ISP User Manager (Offline)</h1>
+      <div class="small">সব ডাটা লোকালি ব্রাউজারে সেভ হবে — কোন সার্ভারে যাবে না।</div>
+    </div>
+
+    <div class="controls">
+      <div class="flex card" style="padding:8px 10px;align-items:center">
+        <label class="small" style="margin-right:8px">মাস:</label>
+        <input type="month" id="monthSelect" class="month">
+        <button class="btn ghost" id="toggleThemeBtn">Dark</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="card">
+    <form id="addForm" class="row">
+      <input type="text" id="inpName" placeholder="নাম (Name)" required>
+      <input type="text" id="inpMobile" placeholder="মোবাইল (Mobile)" required>
+      <select id="inpPackage">
+        <option>5 Mbps</option>
+        <option>10 Mbps</option>
+        <option>20 Mbps</option>
+        <option>Custom</option>
+      </select>
+      <button type="button" class="btn" id="btnAdd">➕ Add</button>
+      <div class="spacer"></div>
+
+      <div class="bulkBtns">
+        <button type="button" class="btn ghost" id="setAllActive">Set All Active</button>
+        <button type="button" class="btn ghost" id="setAllInactive">Set All Inactive</button>
+        <button type="button" class="btn good" id="setAllPaid">Set All Paid (Today)</button>
+        <button type="button" class="btn warn" id="setAllUnpaid">Set All Unpaid</button>
+        <button type="button" class="btn warn" id="deleteSelected">Delete Selected</button>
+      </div>
+    </form>
+
+    <div style="margin-top:10px" class="row">
+      <input type="text" id="searchInput" placeholder="Search name or mobile..." class="search">
+      <div class="spacer"></div>
+      <select id="filterActive" class="small">
+        <option value="all">All</option>
+        <option value="active">Active</option>
+        <option value="inactive">Inactive</option>
+      </select>
+      <select id="filterPaid" class="small">
+        <option value="all">All (Paid/Unpaid)</option>
+        <option value="paid">Paid</option>
+        <option value="unpaid">Unpaid</option>
+      </select>
+      <!-- এক্সপোর্ট/ইমপোর্ট বাটন যোগ করা হয়েছে -->
+      <button type="button" class="btn ghost" id="exportBtn">📤 Export Data</button>
+      <button type="button" class="btn ghost" id="importBtn">📥 Import Data</button>
+      <button type="button" class="btn ghost" id="exportCsv">Export CSV</button>
+      <button type="button" class="btn ghost" id="clearAll">Clear All Data</button>
+    </div>
+
+    <!-- Auto Paid Reset Option -->
+    <div class="auto-reset-container">
+      <input type="checkbox" id="autoPaidReset">
+      <div>
+        <label for="autoPaidReset" class="small">প্রতি মাসে স্বয়ংক্রিয়ভাবে Paid Reset হবে</label>
+        <div class="reset-info" id="resetInfo">পরবর্তী রিসেট: পরবর্তী মাসের ১ তারিখ</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <table id="userTable">
+      <thead>
+        <tr>
+          <th style="width:34px"><input type="checkbox" id="selectAll"></th>
+          <th>#</th>
+          <th>Name</th>
+          <th>Mobile</th>
+          <th>Package</th>
+          <th>Active</th>
+          <th>Payment</th>
+          <th>Payment Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="userTableBody"></tbody>
+    </table>
+  </section>
+</div>
+
+<!-- Edit Modal -->
+<div id="editModal" class="card hidden" style="position:fixed;right:18px;bottom:18px;width:320px;z-index:60;background:var(--card);">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <strong>Edit User</strong>
+    <button type="button" onclick="closeEdit()" style="background:none;border:none;font-size:18px;cursor:pointer">✖</button>
+  </div>
+  <div style="margin-top:8px">
+    <div class="small">নাম</div>
+    <input type="text" id="editName" style="width:100%;margin-bottom:8px;">
+    <div class="small">মোবাইল</div>
+    <input type="text" id="editMobile" style="width:100%;margin-bottom:8px;">
+    <div class="small">প্যাকেজ</div>
+    <input type="text" id="editPackage" style="width:100%;margin-bottom:8px;">
+    <div class="small">Active</div>
+    <select id="editActive" style="width:100%;margin-bottom:8px;">
+      <option value="true">Active</option>
+      <option value="false">Inactive</option>
+    </select>
+    <div style="margin-top:8px;display:flex;gap:8px;align-items:center">
+      <button type="button" class="btn" id="saveEdit">Save</button>
+      <button type="button" class="btn ghost" id="deleteEdit">Delete</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Storage keys
+const STORAGE_KEY = 'isp_users_v1';
+const AUTO_RESET_KEY = 'isp_auto_reset';
+const THEME_KEY = 'isp_theme';
+const LAST_RESET_MONTH_KEY = 'isp_last_reset_month';
+
+// Global variables
+let users = [];
+let currentMonthKey = '';
+let editingId = null;
+
+// Initialize application
+function init() {
+  console.log('Initializing application...');
+  
+  // Load data from localStorage
+  loadData();
+  
+  // Initialize month selector
+  initMonthSelector();
+  
+  // Initialize theme
+  initTheme();
+  
+  // Initialize event listeners
+  initEventListeners();
+  
+  // Check for auto reset
+  checkAutoReset();
+  
+  // Initial render
+  render();
+  
+  console.log('Application initialized successfully');
+}
+
+// Load data from localStorage
+function loadData() {
+  const storedUsers = localStorage.getItem(STORAGE_KEY);
+  users = storedUsers ? JSON.parse(storedUsers) : [];
+  console.log('Loaded users:', users.length);
+}
+
+// Initialize month selector
+function initMonthSelector() {
+  const monthSelect = document.getElementById('monthSelect');
+  const now = new Date();
+  const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  monthSelect.value = currentMonth;
+  currentMonthKey = currentMonth;
+  
+  monthSelect.addEventListener('change', function() {
+    currentMonthKey = this.value;
+    render();
+  });
+}
+
+// Initialize theme
+function initTheme() {
+  const savedTheme = localStorage.getItem(THEME_KEY) || 'light';
+  const toggleBtn = document.getElementById('toggleThemeBtn');
+  const html = document.documentElement;
+  
+  if (savedTheme === 'dark') {
+    html.setAttribute('data-theme', 'dark');
+    toggleBtn.textContent = 'Light';
+  } else {
+    html.removeAttribute('data-theme');
+    toggleBtn.textContent = 'Dark';
+  }
+  
+  toggleBtn.addEventListener('click', function() {
+    const html = document.documentElement;
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    
+    if (isDark) {
+      html.removeAttribute('data-theme');
+      this.textContent = 'Dark';
+      localStorage.setItem(THEME_KEY, 'light');
+    } else {
+      html.setAttribute('data-theme', 'dark');
+      this.textContent = 'Light';
+      localStorage.setItem(THEME_KEY, 'dark');
+    }
+  });
+}
+
+// Initialize event listeners
+function initEventListeners() {
+  // Add user
+  document.getElementById('btnAdd').addEventListener('click', addUser);
+  
+  // Bulk operations
+  document.getElementById('setAllActive').addEventListener('click', () => bulkSetActive(true));
+  document.getElementById('setAllInactive').addEventListener('click', () => bulkSetActive(false));
+  document.getElementById('setAllPaid').addEventListener('click', () => bulkSetPaid(true));
+  document.getElementById('setAllUnpaid').addEventListener('click', () => bulkSetPaid(false));
+  document.getElementById('deleteSelected').addEventListener('click', deleteSelected);
+  
+  // Select all checkbox
+  document.getElementById('selectAll').addEventListener('change', toggleSelectAll);
+  
+  // Search and filters
+  document.getElementById('searchInput').addEventListener('input', render);
+  document.getElementById('filterActive').addEventListener('change', render);
+  document.getElementById('filterPaid').addEventListener('change', render);
+  
+  // Export and clear
+  document.getElementById('exportCsv').addEventListener('click', exportCSV);
+  document.getElementById('clearAll').addEventListener('click', clearAllData);
+  
+  // Auto reset
+  const autoResetCheckbox = document.getElementById('autoPaidReset');
+  autoResetCheckbox.checked = localStorage.getItem(AUTO_RESET_KEY) === 'true';
+  autoResetCheckbox.addEventListener('change', function() {
+    localStorage.setItem(AUTO_RESET_KEY, this.checked);
+    updateResetInfo();
+  });
+  
+  // Edit modal
+  document.getElementById('saveEdit').addEventListener('click', saveEdit);
+  document.getElementById('deleteEdit').addEventListener('click', deleteEdit);
+  
+  // এক্সপোর্ট/ইমপোর্ট ইভেন্ট লিসেনার যোগ করা হয়েছে
+  document.getElementById('exportBtn').addEventListener('click', exportData);
+  document.getElementById('importBtn').addEventListener('click', importData);
+  
+  // Update reset info
+  updateResetInfo();
+}
+
+// Check for auto reset
+function checkAutoReset() {
+  const autoResetEnabled = localStorage.getItem(AUTO_RESET_KEY) === 'true';
+  if (!autoResetEnabled) return;
+  
+  const now = new Date();
+  const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  const lastResetMonth = localStorage.getItem(LAST_RESET_MONTH_KEY);
+  
+  // If it's a new month and we haven't reset yet
+  if (lastResetMonth !== currentMonth) {
+    // Check if it's the 1st day of the month
+    if (now.getDate() === 1) {
+      // Wait a moment for the page to load completely
+      setTimeout(() => {
+        if (confirm(`নতুন মাস ${currentMonth} শুরু হয়েছে। সকল ইউজারের Paid status Reset করতে চান?`)) {
+          resetAllPayments();
+          localStorage.setItem(LAST_RESET_MONTH_KEY, currentMonth);
+          updateResetInfo();
+        }
+      }, 1000);
+    }
+  }
+}
+
+// Reset all payments for current month
+function resetAllPayments() {
+  const now = new Date();
+  const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  
+  users.forEach(user => {
+    if (!user.payments) user.payments = {};
+    user.payments[currentMonth] = { status: 'Unpaid', date: '' };
+  });
+  
+  saveData();
+  render();
+  alert(`সকল ইউজারের Paid status Reset করা হয়েছে। মাস: ${currentMonth}`);
+}
+
+// Update reset information display
+function updateResetInfo() {
+  const autoResetEnabled = localStorage.getItem(AUTO_RESET_KEY) === 'true';
+  const resetInfo = document.getElementById('resetInfo');
+  
+  if (autoResetEnabled) {
+    const now = new Date();
+    const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+    const nextMonthFormatted = nextMonth.toLocaleDateString('bn-BD', { 
+      year: 'numeric', 
+      month: 'long' 
+    });
+    resetInfo.textContent = `পরবর্তী রিসেট: ${nextMonthFormatted} এর ১ তারিখ`;
+    resetInfo.style.color = 'var(--good)';
+  } else {
+    resetInfo.textContent = 'অটো রিসেট নিষ্ক্রিয়';
+    resetInfo.style.color = 'var(--muted)';
+  }
+}
+
+// এক্সপোর্ট ডাটা ফাংশন
+function exportData() {
+  const dataToExport = {
+    users: users,
+    exportDate: new Date().toISOString(),
+    totalUsers: users.length,
+    version: '1.0'
+  };
+  
+  const dataStr = JSON.stringify(dataToExport, null, 2);
+  const blob = new Blob([dataStr], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `isp_users_backup_${new Date().toISOString().split('T')[0]}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  
+  alert(`সফলভাবে ${users.length} ইউজার এক্সপোর্ট করা হয়েছে!`);
+}
+
+// ইমপোর্ট ডাটা ফাংশন  
+function importData() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  
+  input.onchange = function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const importedData = JSON.parse(e.target.result);
+        
+        if (importedData.users && Array.isArray(importedData.users)) {
+          if (confirm(`${importedData.users.length} টি ইউজার ইমপোর্ট করবেন? বর্তমান ${users.length} টি ইউজার থাকলে রিপ্লেস হবে।`)) {
+            users = importedData.users;
+            saveData();
+            render();
+            alert('ডাটা সফলভাবে ইমপোর্ট হয়েছে!');
+          }
+        } else {
+          alert('ভাল ফাইল ফরম্যাট নয়। সঠিক JSON ফাইল সিলেক্ট করুন।');
+        }
+      } catch (error) {
+        alert('ফাইল পড়তে সমস্যা: ' + error.message);
+      }
+    };
+    reader.readAsText(file);
+  };
+  
+  input.click();
+}
+
+// Add new user
+function addUser() {
+  const name = document.getElementById('inpName').value.trim();
+  const mobile = document.getElementById('inpMobile').value.trim();
+  const package = document.getElementById('inpPackage').value;
+  
+  if (!name || !mobile) {
+    alert('নাম ও মোবাইল দিন।');
+    return;
+  }
+  
+  const newUser = {
+    id: Date.now(),
+    name,
+    mobile,
+    package,
+    active: true,
+    payments: {}
+  };
+  
+  users.push(newUser);
+  saveData();
+  
+  // Clear form
+  document.getElementById('inpName').value = '';
+  document.getElementById('inpMobile').value = '';
+  
+  render();
+}
+
+// Save data to localStorage
+function saveData() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
+}
+
+// Render table
+function render() {
+  const tbody = document.getElementById('userTableBody');
+  const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+  const activeFilter = document.getElementById('filterActive').value;
+  const paidFilter = document.getElementById('filterPaid').value;
+  
+  // Filter users
+  let filteredUsers = users.filter(user => {
+    // Search filter
+    const matchesSearch = !searchTerm || 
+      user.name.toLowerCase().includes(searchTerm) || 
+      user.mobile.includes(searchTerm);
+    
+    // Active filter
+    const matchesActive = activeFilter === 'all' || 
+      (activeFilter === 'active' && user.active) || 
+      (activeFilter === 'inactive' && !user.active);
+    
+    // Paid filter
+    const userPayment = user.payments && user.payments[currentMonthKey];
+    const isPaid = userPayment && userPayment.status === 'Paid';
+    const matchesPaid = paidFilter === 'all' || 
+      (paidFilter === 'paid' && isPaid) || 
+      (paidFilter === 'unpaid' && !isPaid);
+    
+    return matchesSearch && matchesActive && matchesPaid;
+  });
+  
+  // Generate table rows
+  tbody.innerHTML = '';
+  
+  filteredUsers.forEach((user, index) => {
+    const row = document.createElement('tr');
+    const payment = user.payments && user.payments[currentMonthKey];
+    const paymentStatus = payment ? payment.status : 'Unpaid';
+    const paymentDate = payment ? payment.date : '';
+    
+    row.innerHTML = `
+      <td><input type="checkbox" class="user-checkbox" data-id="${user.id}"></td>
+      <td>${index + 1}</td>
+      <td>${user.name}</td>
+      <td>${user.mobile}</td>
+      <td>${user.package}</td>
+      <td>
+        <button class="toggle ${user.active ? 'active' : 'inactive'}" onclick="toggleActive(${user.id})">
+          ${user.active ? 'Active' : 'Inactive'}
+        </button>
+      </td>
+      <td>
+        <button class="toggle ${paymentStatus === 'Paid' ? 'active' : 'inactive'}" onclick="togglePayment(${user.id})">
+          ${paymentStatus}
+        </button>
+      </td>
+      <td>
+        <input type="date" value="${paymentDate}" onchange="updatePaymentDate(${user.id}, this.value)" style="border:1px solid #ddd;padding:4px;border-radius:4px;">
+      </td>
+      <td>
+        <button class="actionBtn edit" onclick="openEdit(${user.id})">Edit</button>
+        <button class="actionBtn del" onclick="deleteUser(${user.id})">Delete</button>
+      </td>
+    `;
+    
+    tbody.appendChild(row);
+  });
+}
+
+// Toggle user active status
+function toggleActive(userId) {
+  const user = users.find(u => u.id === userId);
+  if (user) {
+    user.active = !user.active;
+    saveData();
+    render();
+  }
+}
+
+// Toggle payment status
+function togglePayment(userId) {
+  const user = users.find(u => u.id === userId);
+  if (user) {
+    if (!user.payments) user.payments = {};
+    
+    const currentPayment = user.payments[currentMonthKey];
+    if (currentPayment && currentPayment.status === 'Paid') {
+      user.payments[currentMonthKey] = { status: 'Unpaid', date: '' };
+    } else {
+      user.payments[currentMonthKey] = { 
+        status: 'Paid', 
+        date: new Date().toISOString().split('T')[0] 
+      };
+    }
+    
+    saveData();
+    render();
+  }
+}
+
+// Update payment date
+function updatePaymentDate(userId, date) {
+  const user = users.find(u => u.id === userId);
+  if (user) {
+    if (!user.payments) user.payments = {};
+    if (!user.payments[currentMonthKey]) {
+      user.payments[currentMonthKey] = { status: 'Unpaid', date: '' };
+    }
+    user.payments[currentMonthKey].date = date;
+    saveData();
+  }
+}
+
+// Bulk set active/inactive
+function bulkSetActive(active) {
+  if (confirm(`সব ইউজারকে ${active ? 'Active' : 'Inactive'} করবেন?`)) {
+    users.forEach(user => user.active = active);
+    saveData();
+    render();
+  }
+}
+
+// Bulk set paid/unpaid
+function bulkSetPaid(paid) {
+  if (confirm(`সব ইউজারকে ${paid ? 'Paid' : 'Unpaid'} করবেন?`)) {
+    users.forEach(user => {
+      if (!user.payments) user.payments = {};
+      user.payments[currentMonthKey] = { 
+        status: paid ? 'Paid' : 'Unpaid', 
+        date: paid ? new Date().toISOString().split('T')[0] : '' 
+      };
+    });
+    saveData();
+    render();
+  }
+}
+
+// Delete selected users
+function deleteSelected() {
+  const checkboxes = document.querySelectorAll('.user-checkbox:checked');
+  const selectedIds = Array.from(checkboxes).map(cb => parseInt(cb.dataset.id));
+  
+  if (selectedIds.length === 0) {
+    alert('কোনো ইউজার সিলেক্ট করা হয়নি।');
+    return;
+  }
+  
+  if (confirm(`${selectedIds.length} টি ইউজার ডিলিট করবেন?`)) {
+    users = users.filter(user => !selectedIds.includes(user.id));
+    saveData();
+    render();
+  }
+}
+
+// Toggle select all
+function toggleSelectAll() {
+  const checkboxes = document.querySelectorAll('.user-checkbox');
+  const selectAll = document.getElementById('selectAll').checked;
+  
+  checkboxes.forEach(cb => cb.checked = selectAll);
+}
+
+// Delete single user
+function deleteUser(userId) {
+  if (confirm('ডিলিট নিশ্চিত?')) {
+    users = users.filter(user => user.id !== userId);
+    saveData();
+    render();
+  }
+}
+
+// Open edit modal
+function openEdit(userId) {
+  const user = users.find(u => u.id === userId);
+  if (user) {
+    editingId = userId;
+    document.getElementById('editName').value = user.name;
+    document.getElementById('editMobile').value = user.mobile;
+    document.getElementById('editPackage').value = user.package;
+    document.getElementById('editActive').value = user.active.toString();
+    document.getElementById('editModal').classList.remove('hidden');
+  }
+}
+
+// Close edit modal
+function closeEdit() {
+  editingId = null;
+  document.getElementById('editModal').classList.add('hidden');
+}
+
+// Save edit
+function saveEdit() {
+  const user = users.find(u => u.id === editingId);
+  if (user) {
+    user.name = document.getElementById('editName').value.trim();
+    user.mobile = document.getElementById('editMobile').value.trim();
+    user.package = document.getElementById('editPackage').value;
+    user.active = document.getElementById('editActive').value === 'true';
+    saveData();
+    closeEdit();
+    render();
+  }
+}
+
+// Delete from edit modal
+function deleteEdit() {
+  if (confirm('Edit modal থেকে ডিলিট নিশ্চিত?')) {
+    users = users.filter(user => user.id !== editingId);
+    saveData();
+    closeEdit();
+    render();
+  }
+}
+
+// Export CSV
+function exportCSV() {
+  const headers = ['ID', 'Name', 'Mobile', 'Package', 'Active', 'Payment Status', 'Payment Date', 'Month'];
+  const rows = users.map(user => {
+    const payment = user.payments && user.payments[currentMonthKey];
+    return [
+      user.id,
+      `"${user.name}"`,
+      user.mobile,
+      user.package,
+      user.active ? 'Active' : 'Inactive',
+      payment ? payment.status : 'Unpaid',
+      payment ? payment.date : '',
+      currentMonthKey
+    ];
+  });
+  
+  const csvContent = [headers, ...rows].map(row => row.join(',')).join('\n');
+  const blob = new Blob([csvContent], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `isp_users_${currentMonthKey}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// Clear all data
+function clearAllData() {
+  if (confirm('সব ডেটা মুছে ফেলতে চান? (ব্যাকআপ নেই)')) {
+    users = [];
+    saveData();
+    render();
+  }
+}
+
+// Initialize the application when DOM is loaded
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
