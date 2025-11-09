@@ -1,0 +1,1408 @@
+<!doctype html>
+<html lang="bn">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pmm Corporation Tools</title>
+  <style>
+    :root{font-family:Inter, Roboto, system-ui, -apple-system, 'Segoe UI', sans-serif}
+    body{
+      margin:0;
+      padding:0;
+      background: #0f172a;
+      color:#e6eef8;
+      position: relative;
+      overflow-x: hidden;
+      min-height: 100vh;
+      /* Prevent elastic scrolling on mobile */
+      overscroll-behavior: none;
+      /* Improve text rendering */
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+    
+    /* Particle Background - Reduced for mobile */
+    #particles-js {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: -2;
+      /* Reduce GPU usage */
+      will-change: transform;
+    }
+    
+    /* Advanced RGB Background Effects - Optimized for mobile */
+    .rgb-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+      /* Reduce animation strain */
+      will-change: transform;
+    }
+    
+    .rgb-circle {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(40px); /* Reduced blur for mobile */
+      opacity: 0.15; /* Reduced opacity for better performance */
+      animation: float-mobile 30s infinite ease-in-out; /* Slower animation */
+      /* Optimize for mobile */
+      will-change: transform;
+    }
+    
+    .circle-1 {
+      width: 200px; /* Smaller for mobile */
+      height: 200px;
+      background: #ff0055;
+      top: 10%;
+      left: 10%;
+      animation-delay: 0s;
+      box-shadow: 0 0 50px 25px rgba(255, 0, 85, 0.2); /* Reduced shadow */
+    }
+    
+    .circle-2 {
+      width: 250px;
+      height: 250px;
+      background: #00aaff;
+      top: 60%;
+      left: 70%;
+      animation-delay: -7s;
+      animation-duration: 35s;
+      box-shadow: 0 0 60px 30px rgba(0, 170, 255, 0.2);
+    }
+    
+    .circle-3 {
+      width: 225px;
+      height: 225px;
+      background: #00ff88;
+      top: 30%;
+      left: 80%;
+      animation-delay: -14s;
+      animation-duration: 40s;
+      box-shadow: 0 0 55px 28px rgba(0, 255, 136, 0.2);
+    }
+    
+    .circle-4 {
+      width: 175px;
+      height: 175px;
+      background: #ffaa00;
+      top: 70%;
+      left: 20%;
+      animation-delay: -10s;
+      animation-duration: 33s;
+      box-shadow: 0 0 45px 23px rgba(255, 170, 0, 0.2);
+    }
+    
+    /* Reduced animation for mobile */
+    @keyframes float-mobile {
+      0%, 100% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+      }
+      25% {
+        transform: translate(40px, 30px) scale(1.05) rotate(45deg);
+      }
+      50% {
+        transform: translate(0, 60px) scale(0.95) rotate(90deg);
+      }
+      75% {
+        transform: translate(-40px, 30px) scale(1.02) rotate(135deg);
+      }
+    }
+    
+    /* Respect reduced motion preference */
+    @media (prefers-reduced-motion: reduce) {
+      .rgb-circle {
+        animation: none;
+      }
+      
+      .glowing-title {
+        animation: none;
+      }
+      
+      .glowing-title::after {
+        animation: none;
+      }
+      
+      button::before, .help-btn::before, .convert-btn::before, .copy-btn::before {
+        animation: none;
+      }
+      
+      .tabs::before, .hex-converter-card::before, .enhanced-card::before {
+        animation: none;
+      }
+    }
+    
+    /* Advanced RGB Glowing Text Effect - Optimized */
+    .glowing-title {
+      font-weight: 800;
+      background: linear-gradient(90deg, #ff0055, #ffaa00, #00ff88, #00aaff, #ff0055);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: rgb-shift 6s ease infinite; /* Slower animation */
+      text-shadow: 0 0 10px rgba(255, 0, 85, 0.3); /* Reduced shadow */
+      position: relative;
+      display: inline-block;
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      /* Optimize for mobile */
+      will-change: background-position;
+    }
+    
+    .glowing-title::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, #ff0055, #ffaa00, #00ff88, #00aaff, #ff0055);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: rgb-shift 6s ease infinite reverse;
+      opacity: 0.3; /* Reduced opacity */
+      filter: blur(3px); /* Reduced blur */
+      z-index: -1;
+    }
+    
+    @keyframes rgb-shift {
+      0%, 100% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+    }
+    
+    /* Advanced Navigation Tabs - Mobile Optimized */
+    .tabs {
+      display: flex;
+      background: rgba(7, 16, 39, 0.95);
+      padding: 0 5px; /* Reduced padding */
+      border-bottom: 1px solid #23313f;
+      position: relative;
+      backdrop-filter: blur(10px); /* Reduced blur */
+      z-index: 10;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3); /* Reduced shadow */
+      flex-wrap: wrap;
+      /* Prevent layout shifts */
+      contain: layout style paint;
+    }
+    
+    .tabs::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #ff0055, #ffaa00, #00ff88, #00aaff);
+      background-size: 300% 100%;
+      animation: rgb-shift 8s ease infinite; /* Slower animation */
+    }
+    
+    .tab {
+      padding: 10px 12px; /* Reduced padding */
+      background: transparent;
+      border: none;
+      color: #9fb0c8;
+      cursor: pointer;
+      font-size: clamp(0.8rem, 3vw, 0.9rem);
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s ease; /* Faster transition */
+      position: relative;
+      overflow: hidden;
+      font-weight: 600;
+      flex: 1;
+      min-width: 100px; /* Smaller min-width */
+      text-align: center;
+      /* Improve touch targets */
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .tab::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+      transition: left 0.5s; /* Faster transition */
+    }
+    
+    .tab:hover::before,
+    .tab:active::before {
+      left: 100%;
+    }
+    
+    .tab.active {
+      color: #fff;
+      border-bottom-color: #1f6feb;
+      background: linear-gradient(to bottom, rgba(31, 111, 235, 0.15), transparent);
+      text-shadow: 0 0 8px rgba(31, 111, 235, 0.5); /* Reduced shadow */
+    }
+    
+    .tab:hover,
+    .tab:active {
+      color: #e6eef8;
+      background: rgba(31, 111, 235, 0.08);
+      text-shadow: 0 0 6px rgba(255, 255, 255, 0.4); /* Reduced shadow */
+    }
+    
+    /* Advanced How to use button - Mobile Optimized */
+    .help-btn {
+      position: relative;
+      margin: 8px auto;
+      padding: 12px 16px; /* Increased padding for better touch */
+      background: linear-gradient(135deg, #1f6feb, #0d5fd9);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      font-size: clamp(0.8rem, 3vw, 0.9rem);
+      font-weight: 600;
+      transition: all 0.3s ease; /* Faster transition */
+      z-index: 1;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(31, 111, 235, 0.2); /* Reduced shadow */
+      display: block;
+      width: fit-content;
+      /* Improve touch targets */
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .help-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s; /* Faster transition */
+    }
+    
+    .help-btn:hover::before,
+    .help-btn:active::before {
+      left: 100%;
+    }
+    
+    .help-btn:hover,
+    .help-btn:active {
+      background: linear-gradient(135deg, #0d5fd9, #1f6feb);
+      transform: scale(1.05); /* Reduced scale */
+      box-shadow: 0 4px 15px rgba(31, 111, 235, 0.4); /* Reduced shadow */
+    }
+    
+    /* Tool Container */
+    .tool-container {
+      display: none;
+      padding: 12px; /* Reduced padding */
+      position: relative;
+      z-index: 1;
+      /* Prevent layout shifts */
+      contain: layout style paint;
+    }
+    
+    .tool-container.active {
+      display: block;
+      animation: fadeIn 0.4s ease; /* Faster animation */
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Byte Diff Viewer Styles - Mobile Optimized */
+    .wrap{
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px; /* Reduced gap */
+      margin-bottom: 12px;
+    }
+    
+    @media (min-width: 768px) {
+      .wrap {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    
+    textarea{
+      width:100%;
+      height:150px; /* Reduced height */
+      padding:10px; /* Reduced padding */
+      border-radius:8px;
+      border:1px solid #23313f;
+      background:#071027;
+      color:inherit;
+      font-family:monospace;
+      resize:vertical; 
+      transition: all 0.3s ease; /* Faster transition */
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); /* Reduced shadow */
+      font-size: clamp(0.8rem, 3vw, 0.9rem);
+      /* Improve scrolling performance */
+      -webkit-overflow-scrolling: touch;
+      /* Prevent textarea from causing layout shifts */
+      contain: layout style;
+    }
+    
+    textarea:focus {
+      border-color: #1f6feb;
+      box-shadow: 0 0 0 2px rgba(31, 111, 235, 0.2), 0 4px 12px rgba(31, 111, 235, 0.15);
+      transform: translateY(-1px); /* Reduced transform */
+    }
+    
+    .controls{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 6px; /* Reduced gap */
+      align-items: center; 
+      margin-top: 12px;
+    }
+    
+    /* Advanced RGB Button Effects - Mobile Optimized */
+    button {
+      background: #1f6feb;
+      border: 0;
+      padding: 10px 12px; /* Increased padding for touch */
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease; /* Faster transition */
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(31, 111, 235, 0.2); /* Reduced shadow */
+      font-size: clamp(0.75rem, 2.5vw, 0.85rem);
+      flex: 1;
+      min-width: fit-content;
+      justify-content: center;
+      /* Improve touch targets */
+      min-height: 44px;
+    }
+    
+    button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, #ff0055, #ffaa00, #00ff88, #00aaff, #ff0055);
+      background-size: 400% 400%;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s; /* Faster transition */
+    }
+    
+    button:hover::before,
+    button:active::before {
+      opacity: 1;
+      animation: rgb-flow 4s linear infinite; /* Slower animation */
+    }
+    
+    button:hover,
+    button:active {
+      transform: translateY(-2px); /* Reduced transform */
+      box-shadow: 0 4px 12px rgba(31, 111, 235, 0.3); /* Reduced shadow */
+    }
+    
+    button:active {
+      transform: translateY(0);
+    }
+    
+    @keyframes rgb-flow {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 400% 50%; }
+    }
+    
+    button.ghost{
+      background:transparent;
+      border:2px solid #2b445c;
+      box-shadow: none;
+    }
+    
+    button.ghost:hover,
+    button.ghost:active {
+      border-color: #1f6feb;
+      box-shadow: 0 0 10px rgba(31, 111, 235, 0.4); /* Reduced shadow */
+      background: rgba(31, 111, 235, 0.1);
+    }
+    
+    .result{
+      margin-top:12px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    .hex-line{
+      font-family:monospace;
+      white-space:pre-wrap;
+      word-break:break-all;
+      font-size: clamp(0.75rem, 2.5vw, 0.85rem);
+    }
+    
+    .same{background:transparent}
+    .removed{background:#582020;color:#ffd6d6;padding:2px 4px;border-radius:4px; box-shadow: 0 1px 2px rgba(0,0,0,0.15);}
+    .added{background:#163a20;color:#c8ffd8;padding:2px 4px;border-radius:4px; box-shadow: 0 1px 2px rgba(0,0,0,0.15);}
+    .changed-old{background:#6b2b2b;color:#ffd8d8;padding:2px 4px;border-radius:3px; box-shadow: 0 1px 2px rgba(0,0,0,0.15);}
+    .changed-new{background:#1b5b2b;color:#cfffdf;padding:2px 4px;border-radius:3px; box-shadow: 0 1px 2px rgba(0,0,0,0.15);}
+    
+    table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:12px; 
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15); 
+      border-radius: 6px; 
+      overflow: hidden;
+      font-size: clamp(0.75rem, 2.5vw, 0.85rem);
+      min-width: 500px;
+    }
+    
+    th,td{
+      padding:6px 8px;
+      border-bottom:1px solid #1a2b3a;
+      text-align:left;
+      font-family:monospace;
+      white-space: nowrap;
+    }
+    
+    th{
+      background:linear-gradient(to bottom, #071826, #0a1f33);
+      color:#9fc7ff; 
+      font-weight: 700;
+    }
+    
+    .meta{
+      font-size: clamp(0.8rem, 3vw, 0.9rem);
+      color:#9fb0c8;
+      margin-bottom:8px;
+    }
+    
+    .footer{
+      margin-top:10px;
+      color:#9fb0c8;
+      font-size: clamp(0.8rem, 3vw, 0.9rem);
+    }
+    
+    .small{
+      font-size: clamp(0.8rem, 3vw, 0.9rem);
+      color:#9fb0c8;
+    }
+    
+    .badge{
+      display:inline-block;
+      padding:4px 8px;
+      border-radius:6px;
+      background:linear-gradient(to bottom, #0b2b3a, #0d3245);
+      color:#bfe8ff;
+      margin-left:4px;
+      font-weight: 600;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      font-size: clamp(0.75rem, 2.5vw, 0.85rem);
+    }
+    
+    .wrap-single{
+      display:flex;
+      gap: 6px;
+      flex-wrap:wrap; 
+      margin-top: 8px;
+    }
+    
+    input[type=file]{display:none}
+    
+    .toast{
+      position:fixed;
+      bottom:20px;
+      right:20px;
+      left: 20px;
+      background:linear-gradient(135deg, #1f6feb, #0d5fd9);
+      color:white;
+      padding:12px 16px;
+      border-radius:8px;
+      opacity:0;
+      transition:all 0.3s ease; /* Faster transition */
+      z-index: 1000;
+      box-shadow: 0 4px 15px rgba(31, 111, 235, 0.3); /* Reduced shadow */
+      font-weight: 600;
+      text-align: center;
+      max-width: 300px;
+      margin: 0 auto;
+      /* Prevent toast from causing layout shifts */
+      contain: layout style paint;
+    }
+    
+    .toast.show{
+      opacity:1; 
+      transform: translateY(-5px); /* Reduced transform */
+    }
+    
+    .visual-comparison {
+      margin-bottom: 16px;
+      border: 1px solid #23313f;
+      border-radius: 8px;
+      padding: 10px;
+      background: #071027;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    .question-mark {
+      background: #ffeb3b;
+      color: #333;
+      padding: 2px 4px;
+      border-radius: 3px;
+      font-weight: bold;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+    }
+    
+    /* Advanced Hex Converter Styles - Mobile Optimized */
+    .hex-converter-card {
+      max-width: 100%;
+      margin: 0 auto;
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+      padding: 16px; /* Reduced padding */
+      box-shadow: 0 4px 20px rgba(2,6,23,0.6); /* Reduced shadow */
+      backdrop-filter: blur(10px); /* Reduced blur */
+      border: 1px solid rgba(255,255,255,0.08);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    @media (min-width: 768px) {
+      .hex-converter-card {
+        max-width: 560px;
+        padding: 20px;
+      }
+    }
+    
+    .hex-converter-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #ff0055, #ffaa00, #00ff88, #00aaff);
+      background-size: 300% 100%;
+      animation: rgb-shift 6s ease infinite; /* Slower animation */
+    }
+    
+    .hex-converter-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255,0,85,0.05), rgba(0,170,255,0.05), rgba(0,255,136,0.05));
+      z-index: -1;
+      opacity: 0.7;
+    }
+    
+    .hex-converter-card h1 {
+      font-size: clamp(1.2rem, 4vw, 1.5rem);
+      margin: 0 0 10px;
+    }
+    
+    .hex-converter-card .subtitle {
+      margin: 0 0 15px;
+      color: #c9e0ffcc;
+      font-size: clamp(0.8rem, 3vw, 0.9rem);
+      line-height: 1.5;
+    }
+    
+    .row{
+      display:flex;
+      flex-direction: column;
+      gap: 8px; /* Reduced gap */
+      align-items: stretch;
+    }
+    
+    @media (min-width: 480px) {
+      .row {
+        flex-direction: row;
+        align-items: center;
+      }
+    }
+    
+    input[type=text]{
+      flex:1;
+      padding:12px 14px;
+      border-radius:8px;
+      border:1px solid rgba(255,255,255,0.08);
+      background:rgba(255,255,255,0.05);
+      color:inherit;
+      font-size: clamp(0.9rem, 3vw, 1rem);
+      transition: all 0.3s ease; /* Faster transition */
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    
+    input[type=text]:focus {
+      border-color: #1f6feb;
+      box-shadow: 0 0 0 2px rgba(31, 111, 235, 0.2), 0 4px 12px rgba(31, 111, 235, 0.15);
+      transform: translateY(-1px); /* Reduced transform */
+    }
+    
+    .convert-btn{
+      padding:12px 16px;
+      border-radius:8px;
+      border:0;
+      background:linear-gradient(135deg, #0ea5a4, #0d9488);
+      color:#fff;
+      cursor:pointer;
+      font-weight:600;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 10px rgba(14, 165, 164, 0.3); /* Reduced shadow */
+      font-size: clamp(0.8rem, 3vw, 0.9rem);
+      justify-content: center;
+      /* Improve touch targets */
+      min-height: 44px;
+    }
+    
+    .convert-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, #ff0055, #ffaa00, #00ff88, #00aaff, #ff0055);
+      background-size: 400% 400%;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s; /* Faster transition */
+    }
+    
+    .convert-btn:hover::before,
+    .convert-btn:active::before {
+      opacity: 1;
+      animation: rgb-flow 4s linear infinite; /* Slower animation */
+    }
+    
+    .convert-btn:hover,
+    .convert-btn:active {
+      transform: translateY(-2px); /* Reduced transform */
+      box-shadow: 0 4px 15px rgba(14, 165, 164, 0.4); /* Reduced shadow */
+    }
+    
+    .convert-btn:active{transform:translateY(0)}
+    
+    .converter-result{
+      margin-top:12px;
+      padding:12px;
+      border-radius:8px;
+      background:rgba(255,255,255,0.04);
+      border:1px solid rgba(255,255,255,0.06);
+      transition: all 0.3s ease; /* Faster transition */
+      font-size: clamp(0.9rem, 3vw, 1rem);
+      font-weight: 600;
+      min-height: 24px;
+      word-break: break-all;
+    }
+    
+    .converter-result:hover {
+      border-color: rgba(255,255,255,0.12);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      transform: translateY(-1px); /* Reduced transform */
+    }
+    
+    .muted{
+      color:#9fb6d9;
+      font-size: clamp(0.8rem, 3vw, 0.9rem);
+    }
+    
+    .error{
+      color:#ffd2d2;
+      background:linear-gradient(135deg, rgba(255,0,0,0.1), rgba(255,100,100,0.1));
+      padding:10px;
+      border-radius:8px;
+      margin-top:8px;
+      border: 1px solid rgba(255,100,100,0.3);
+      box-shadow: 0 2px 8px rgba(255,0,0,0.1);
+      font-size: clamp(0.8rem, 3vw, 0.9rem);
+    }
+    
+    .copy-btn{
+      margin-left:6px;
+      padding:10px 12px;
+      border-radius:8px;
+      border:0;
+      background:linear-gradient(135deg, #64748b, #475569);
+      color:#fff;
+      cursor:pointer;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(100, 116, 139, 0.3); /* Reduced shadow */
+      font-size: clamp(0.8rem, 3vw, 0.9rem);
+      /* Improve touch targets */
+      min-height: 44px;
+    }
+    
+    .copy-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, #ff0055, #ffaa00, #00ff88, #00aaff, #ff0055);
+      background-size: 400% 400%;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s; /* Faster transition */
+    }
+    
+    .copy-btn:hover::before,
+    .copy-btn:active::before {
+      opacity: 1;
+      animation: rgb-flow 4s linear infinite; /* Slower animation */
+    }
+    
+    .copy-btn:hover,
+    .copy-btn:active {
+      transform: translateY(-2px); /* Reduced transform */
+      box-shadow: 0 4px 12px rgba(100, 116, 139, 0.4); /* Reduced shadow */
+    }
+    
+    /* Advanced Card Design - Mobile Optimized */
+    .enhanced-card {
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+      padding: 16px; /* Reduced padding */
+      box-shadow: 0 4px 20px rgba(2,6,23,0.6); /* Reduced shadow */
+      backdrop-filter: blur(10px); /* Reduced blur */
+      border: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    @media (min-width: 768px) {
+      .enhanced-card {
+        padding: 20px;
+        border-radius: 14px;
+      }
+    }
+    
+    .enhanced-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #ff0055, #ffaa00, #00ff88, #00aaff);
+      background-size: 300% 100%;
+      animation: rgb-shift 6s ease infinite; /* Slower animation */
+    }
+    
+    .enhanced-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255,0,85,0.05), rgba(0,170,255,0.05), rgba(0,255,136,0.05));
+      z-index: -1;
+      opacity: 0.7;
+    }
+    
+    /* Mobile-specific optimizations */
+    @media (max-width: 767px) {
+      /* Reduce animations further on mobile */
+      .rgb-circle {
+        animation-duration: 40s;
+      }
+      
+      /* Improve scrolling performance */
+      body {
+        -webkit-overflow-scrolling: touch;
+      }
+      
+      /* Prevent text selection on interactive elements */
+      button, .tab {
+        -webkit-tap-highlight-color: transparent;
+        user-select: none;
+      }
+      
+      /* Optimize images and background rendering */
+      * {
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Particle Background -->
+  <div id="particles-js"></div>
+
+  <!-- Advanced RGB Background Elements -->
+  <div class="rgb-bg">
+    <div class="rgb-circle circle-1"></div>
+    <div class="rgb-circle circle-2"></div>
+    <div class="rgb-circle circle-3"></div>
+    <div class="rgb-circle circle-4"></div>
+  </div>
+
+  <!-- Advanced Navigation Tabs -->
+  <div class="tabs">
+    <button class="tab active" data-tool="byte-diff">🔍 Byte Diff</button>
+    <button class="tab" data-tool="hex-converter">🔄 Hex Converter</button>
+    <button class="help-btn" id="help-btn">❓ How to use</button>
+  </div>
+
+  <!-- Byte Diff Viewer -->
+  <div id="byte-diff" class="tool-container active">
+    <div class="enhanced-card">
+      <h1 class="glowing-title">Pmm Corporation Byte Checker</h1>
+      <div class="meta"><strong></strong></div>
+
+      <div class="wrap">
+        <div>
+          <label class="small">🔍 Search / Original</label>
+          <textarea id="left" placeholder="fast value..."></textarea>
+          <div class="wrap-single">
+            <button id="loadLeft">📁 Load</button>
+            <input id="fileLeft" type="file" accept=".txt" />
+            <button id="clearLeft" class="ghost">🗑️ Clear</button>
+            <button id="upperLeft" class="ghost">⬆️ Upper</button>
+            <button id="lowerLeft" class="ghost">⬇️ Lower</button>
+            <button id="copyLeft" class="ghost">📋 Copy</button>
+          </div>
+        </div>
+        <div>
+          <label class="small">🔄 Replace / New</label>
+          <textarea id="right" placeholder="second value..."></textarea>
+          <div class="wrap-single">
+            <button id="loadRight">📁 Load</button>
+            <input id="fileRight" type="file" accept=".txt" />
+            <button id="clearRight" class="ghost">🗑️ Clear</button>
+            <button id="upperRight" class="ghost">⬆️ Upper</button>
+            <button id="lowerRight" class="ghost">⬇️ Lower</button>
+            <button id="copyRight" class="ghost">📋 Copy</button>
+            <button id="markChanges" class="ghost">❓ Mark ??</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button id="compare">⚡ Compare</button>
+        <button id="visual" class="ghost">👁️ Visual</button>
+        <button id="copyCsv" class="ghost">📊 CSV</button>
+        <div style="flex:1"></div>
+        <div class="small">Bytes: <span id="countLeft">0</span> → <span id="countRight">0</span></div>
+      </div>
+    </div>
+
+    <div id="visual-result" class="visual-comparison"></div>
+    <div id="result" class="result"></div>
+  </div>
+
+  <!-- Hex Converter -->
+  <div id="hex-converter" class="tool-container">
+    <div class="hex-converter-card">
+      <h1 class="glowing-title">Pmm Corporation || Hex ↔ Decimal</h1>
+      <p class="subtitle">Type: <code>0xA2</code> → <strong>162</strong>, or <code>162</code> → <strong>0xA2</strong></p>
+
+      <div class="row">
+        <input id="hexInput" type="text" placeholder="Type: 0xA2 or 162" autofocus />
+        <button id="convertBtn" class="convert-btn">🔄 Convert</button>
+        <button id="clearHexBtn" class="copy-btn">🗑️ Clear</button>
+      </div>
+
+      <div id="hexResult" class="converter-result muted">Results will appear here</div>
+      <div id="hexError" class="error" style="display:none"></div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center">
+        <button id="copyHexResult" class="copy-btn">📋 Copy</button>
+        <div class="muted">Auto-detects <code>0x</code> prefix</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast">Copied!</div>
+
+<script>
+// Debounce function to limit how often a function can be called
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
+// Particle.js for background - Optimized for mobile
+document.addEventListener('DOMContentLoaded', function() {
+  // Load particles.js library dynamically only if needed
+  if (window.innerWidth > 768) { // Only load on larger screens
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js';
+    script.onload = function() {
+      particlesJS("particles-js", {
+        particles: {
+          number: { value: 40, density: { enable: true, value_area: 400 } }, // Reduced particles
+          color: { value: "#ffffff" },
+          shape: { type: "circle" },
+          opacity: { value: 0.2, random: true }, // Reduced opacity
+          size: { value: 2, random: true }, // Smaller size
+          line_linked: {
+            enable: false, // Disable lines on mobile
+            distance: 150,
+            color: "#1f6feb",
+            opacity: 0.1,
+            width: 1
+          },
+          move: {
+            enable: true,
+            speed: 1, // Slower movement
+            direction: "none",
+            random: true,
+            straight: false,
+            out_mode: "out",
+            bounce: false
+          }
+        },
+        interactivity: {
+          detect_on: "canvas",
+          events: {
+            onhover: { enable: false }, // Disable hover on mobile
+            onclick: { enable: false }, // Disable click on mobile
+            resize: true
+          }
+        },
+        retina_detect: true
+      });
+    };
+    document.head.appendChild(script);
+  }
+});
+
+// Tab Navigation
+document.addEventListener('DOMContentLoaded', function() {
+  const tabs = document.querySelectorAll('.tab');
+  
+  tabs.forEach(tab => {
+    tab.addEventListener('click', function() {
+      const toolId = this.getAttribute('data-tool');
+      
+      // Hide all tools
+      document.querySelectorAll('.tool-container').forEach(tool => {
+        tool.classList.remove('active');
+      });
+      
+      // Show selected tool
+      document.getElementById(toolId).classList.add('active');
+      
+      // Update tabs
+      document.querySelectorAll('.tab').forEach(t => {
+        t.classList.remove('active');
+      });
+      this.classList.add('active');
+    });
+  });
+});
+
+// Help function
+document.getElementById('help-btn').addEventListener('click', function() {
+  alert(' [Pmm Corporation Byte Checker] ব্যবহারের ক্ষেত্রে প্রথম বক্সে সার্চ প্যাটার্ন দিন, তারপরের বক্সে রিপ্লেস প্যাটার্ন দিন, এবার কম্পেয়ার বাটনে চাপুন , তাহলে নিচে দেখতে পাবেন দুইটি কোড এর মধ্যে ঠিক কোন জায়গায় পরিবর্তন হয়েছে ।  [Hex Converter] ব্যবহারের ক্ষেত্রে হেক্স অবসেট দিলে ডেসিমেল সংখ্যা পাবেন আর ডেসিমেল সংখ্যা দিলে  হেক্স অবসেট পাবেন                                                                                                                                   In case of using [Pmm Corporation Byte Checker] enter the search pattern in the first box, enter the replace pattern in the second box, now press the compare button, then you will see below where exactly the change has been made in the two codes. In case of using [Hex Converter], if you give the hex offset, you will get the decimal number and if you give the decimal number, you will get the hex offset.');
+});
+
+// Byte Diff Viewer Functions
+function normalizeHex(s){
+  if(!s) return '';
+  return s.replace(/0x/gi,'')
+          .replace(/[\r\n\t,]+/g,' ')
+          .replace(/[^0-9a-fA-F ]+/g,' ')
+          .trim()
+          .replace(/ +/g,' ');
+}
+
+function parseBytes(s){
+  s = normalizeHex(s);
+  if(!s) return [];
+  const parts = s.split(' ');
+  const bytes = [];
+  for(const p of parts){
+    if(p==='') continue;
+    if(p.length===1) bytes.push(parseInt(p,16));
+    else if(p.length%2===0){
+      if(p.length>2){for(let i=0;i<p.length;i+=2) bytes.push(parseInt(p.substr(i,2),16));}
+      else bytes.push(parseInt(p,16));
+    } else {
+      const clean = p.length%2?('0'+p):p;
+      for(let i=0;i<clean.length;i+=2) bytes.push(parseInt(clean.substr(i,2),16));
+    }
+  }
+  return bytes.filter(x=>Number.isFinite(x) && x>=0 && x<=255);
+}
+
+function toHex(b){return(b===null||b===undefined)?'--':('0'+b.toString(16).toUpperCase()).slice(-2);}
+
+function makeCsv(rows){
+  const header=['index,orig,new,status'];
+  const lines=rows.map(r=>`${r.index},${r.orig===null?'':toHex(r.orig)},${r.new===null?'':toHex(r.new)},${r.status}`);
+  return header.concat(lines).join('\n');
+}
+
+function markChangesWithQuestionMarks(leftBytes, rightBytes, originalRightText) {
+  const maxLen = Math.max(leftBytes.length, rightBytes.length);
+  let result = '';
+  const originalHexArray = originalRightText.split(' ').filter(x => x.trim() !== '');
+  
+  for(let i = 0; i < maxLen; i++) {
+    const leftByte = i < leftBytes.length ? leftBytes[i] : null;
+    const rightByte = i < rightBytes.length ? rightBytes[i] : null;
+    const originalHex = i < originalHexArray.length ? originalHexArray[i] : '';
+    
+    if (leftByte === null && rightByte !== null) {
+      result += '?? ';
+    } else if (leftByte !== null && rightByte === null) {
+      result += '-- ';
+    } else if (leftByte !== null && rightByte !== null) {
+      if (leftByte === rightByte) {
+        result += originalHex + ' ';
+      } else {
+        result += '?? ';
+      }
+    } else {
+      result += '-- ';
+    }
+  }
+  return result.trim();
+}
+
+function renderDiff(leftBytes,rightBytes){
+  const maxLen=Math.max(leftBytes.length,rightBytes.length);
+  const rows=[];
+  let sameCount=0,changedCount=0,addedCount=0,removedCount=0;
+
+  for(let i=0;i<maxLen;i++){
+    const a=i<leftBytes.length?leftBytes[i]:null;
+    const b=i<rightBytes.length?rightBytes[i]:null;
+    let status='same';
+    if(a===null&&b!==null){status='added';addedCount++;}
+    else if(a!==null&&b===null){status='removed';removedCount++;}
+    else if(a!==null&&b!==null){if(a===b){status='same';sameCount++;}else{status='changed';changedCount++;}}
+    rows.push({index:i,orig:a,new:b,status});
+  }
+
+  const container=document.createElement('div');
+  const meta=document.createElement('div');meta.className='meta';
+  meta.innerHTML=`<strong>Results:</strong> total ${maxLen} bytes — <span class="badge">same ${sameCount}</span> <span class="badge">changed ${changedCount}</span> <span class="badge">added ${addedCount}</span> <span class="badge">removed ${removedCount}</span>`;
+  container.appendChild(meta);
+
+  const visualContainer = document.createElement('div');
+  visualContainer.className = 'hex-line';
+  visualContainer.style.marginTop = '12px';
+  
+  let leftLine='',rightLine='';
+  for(let i=0;i<rows.length;i++){
+    const r=rows[i];
+    if(r.status==='same'){leftLine+=toHex(r.orig)+' ';rightLine+=toHex(r.new)+' ';}
+    else if(r.status==='changed'){leftLine+=`<span class='changed-old'>${toHex(r.orig)}</span> `;rightLine+=`<span class='changed-new'>${toHex(r.new)}</span> `;}
+    else if(r.status==='added'){leftLine+="<span class='same'>--</span> ";rightLine+=`<span class='added'>${toHex(r.new)}</span> `;}
+    else if(r.status==='removed'){leftLine+=`<span class='removed'>${toHex(r.orig)}</span> `;rightLine+="<span class='same'>--</span> ";}
+  }
+  
+  const preLeft=document.createElement('div');
+  preLeft.innerHTML='<strong>Original (left)</strong><br/>'+leftLine;
+  preLeft.style.marginTop='8px';
+  
+  const preRight=document.createElement('div');
+  preRight.innerHTML='<strong>New (right)</strong><br/>'+rightLine;
+  preRight.style.marginTop='6px';
+  
+  visualContainer.appendChild(preLeft);
+  visualContainer.appendChild(preRight);
+
+  const table=document.createElement('table');
+  const thead=document.createElement('thead');thead.innerHTML='<tr><th>#</th><th>Original</th><th>New</th><th>Status</th></tr>';
+  table.appendChild(thead);
+  const tbody=document.createElement('tbody');
+  for(const r of rows){
+    const tr=document.createElement('tr');
+    const tdIndex=document.createElement('td');tdIndex.textContent=r.index;
+    const tdOrig=document.createElement('td');tdOrig.textContent=r.orig===null?'-':toHex(r.orig);
+    const tdNew=document.createElement('td');tdNew.textContent=r.new===null?'-':toHex(r.new);
+    const tdStatus=document.createElement('td');
+    if(r.status==='same'){tdStatus.textContent='same';tdStatus.className='small';}
+    else if(r.status==='added'){tdStatus.textContent='added';tdStatus.className='added';}
+    else if(r.status==='removed'){tdStatus.textContent='removed';tdStatus.className='removed';}
+    else{tdStatus.textContent='changed';tdStatus.className='small';tdOrig.className='changed-old';tdNew.className='changed-new';}
+    tr.appendChild(tdIndex);tr.appendChild(tdOrig);tr.appendChild(tdNew);tr.appendChild(tdStatus);
+    tbody.appendChild(tr);
+  }
+  table.appendChild(tbody);
+  container.appendChild(table);
+
+  return{
+    dom: container,
+    visualDom: visualContainer,
+    rows: rows
+  };
+}
+
+// Byte Diff Viewer Event Listeners
+document.addEventListener('DOMContentLoaded', function() {
+  const leftTA=document.getElementById('left');
+  const rightTA=document.getElementById('right');
+  const countLeft=document.getElementById('countLeft');
+  const countRight=document.getElementById('countRight');
+  const res=document.getElementById('result');
+  const visualRes = document.getElementById('visual-result');
+  let lastRows=[];
+
+  // Debounced update counts to prevent excessive calculations
+  const debouncedUpdateCounts = debounce(function() {
+    const l=parseBytes(leftTA.value).length;
+    const r=parseBytes(rightTA.value).length;
+    countLeft.textContent=l;countRight.textContent=r;
+  }, 150);
+  
+  if (leftTA && rightTA) {
+    leftTA.addEventListener('input', debouncedUpdateCounts);
+    rightTA.addEventListener('input', debouncedUpdateCounts);
+  }
+
+  if (document.getElementById('compare')) {
+    document.getElementById('compare').addEventListener('click',()=>{
+      res.innerHTML='';
+      visualRes.innerHTML='';
+      const left=parseBytes(leftTA.value);
+      const right=parseBytes(rightTA.value);
+      debouncedUpdateCounts();
+      const out=renderDiff(left,right);
+      lastRows=out.rows;
+      visualRes.appendChild(out.visualDom);
+      res.appendChild(out.dom);
+    });
+  }
+
+  if (document.getElementById('markChanges')) {
+    document.getElementById('markChanges').addEventListener('click',()=>{
+      const originalRightText = rightTA.value;
+      const left=parseBytes(leftTA.value);
+      const right=parseBytes(rightTA.value);
+      
+      if(left.length === 0 && right.length === 0) {
+        alert('প্রথমে দুটি বক্সে হেক্স ভ্যালু দিন।');
+        return;
+      }
+      
+      const markedResult = markChangesWithQuestionMarks(left, right, originalRightText);
+      rightTA.value = markedResult;
+      showToast('Changes marked with ??');
+    });
+  }
+
+  function showToast(message = 'Copied!'){
+    const t=document.getElementById('toast');
+    t.textContent = message;
+    t.classList.add('show');
+    setTimeout(()=>{
+      t.classList.remove('show');
+      setTimeout(()=>{
+        t.style.display = 'none';
+      }, 300);
+    }, 1500);
+  }
+
+  function copyText(el){navigator.clipboard.writeText(el.value);showToast();}
+
+  if (document.getElementById('upperLeft')) {
+    document.getElementById('upperLeft').onclick=()=>{leftTA.value=leftTA.value.toUpperCase();};
+  }
+  if (document.getElementById('lowerLeft')) {
+    document.getElementById('lowerLeft').onclick=()=>{leftTA.value=leftTA.value.toLowerCase();};
+  }
+  if (document.getElementById('copyLeft')) {
+    document.getElementById('copyLeft').onclick=()=>copyText(leftTA);
+  }
+  if (document.getElementById('upperRight')) {
+    document.getElementById('upperRight').onclick=()=>{rightTA.value=rightTA.value.toUpperCase();};
+  }
+  if (document.getElementById('lowerRight')) {
+    document.getElementById('lowerRight').onclick=()=>{rightTA.value=rightTA.value.toLowerCase();};
+  }
+  if (document.getElementById('copyRight')) {
+    document.getElementById('copyRight').onclick=()=>copyText(rightTA);
+  }
+
+  function wireFile(btnId,inputId,ta){
+    const btn=document.getElementById(btnId);
+    const input=document.getElementById(inputId);
+    btn.addEventListener('click',()=>input.click());
+    input.addEventListener('change',()=>{
+      const f=input.files[0];if(!f)return;
+      const r=new FileReader();
+      r.onload=()=>{ta.value=r.result;debouncedUpdateCounts();};
+      r.readAsText(f);
+    });
+  }
+  
+  if (document.getElementById('loadLeft') && document.getElementById('fileLeft')) {
+    wireFile('loadLeft','fileLeft',leftTA);
+  }
+  if (document.getElementById('loadRight') && document.getElementById('fileRight')) {
+    wireFile('loadRight','fileRight',rightTA);
+  }
+
+  if (document.getElementById('clearLeft')) {
+    document.getElementById('clearLeft').onclick=()=>{leftTA.value='';debouncedUpdateCounts();};
+  }
+  if (document.getElementById('clearRight')) {
+    document.getElementById('clearRight').onclick=()=>{rightTA.value='';debouncedUpdateCounts();};
+  }
+
+  if (document.getElementById('copyCsv')) {
+    document.getElementById('copyCsv').addEventListener('click',()=>{
+      if(!lastRows||lastRows.length===0){alert('প্রথমে Compare করো।');return;}
+      const csv=makeCsv(lastRows);
+      navigator.clipboard.writeText(csv).then(()=>showToast());
+    });
+  }
+
+  let vizOn=true;
+  if (document.getElementById('visual')) {
+    document.getElementById('visual').addEventListener('click',()=>{
+      vizOn=!vizOn;
+      const elems=document.querySelectorAll('.hex-line, table');
+      elems.forEach(e=>e.style.display=vizOn?'block':'none');
+    });
+  }
+});
+
+// Hex Converter Functions
+document.addEventListener('DOMContentLoaded', function() {
+  const hexInput = document.getElementById('hexInput');
+  const convertBtn = document.getElementById('convertBtn');
+  const clearHexBtn = document.getElementById('clearHexBtn');
+  const hexResult = document.getElementById('hexResult');
+  const hexErrorBox = document.getElementById('hexError');
+  const copyHexBtn = document.getElementById('copyHexResult');
+
+  function showHexError(msg){ 
+    if (hexErrorBox) {
+      hexErrorBox.style.display = 'block'; 
+      hexErrorBox.textContent = msg; 
+    }
+  }
+  
+  function clearHexError(){ 
+    if (hexErrorBox) {
+      hexErrorBox.style.display = 'none'; 
+      hexErrorBox.textContent = ''; 
+    }
+  }
+
+  function formatHex(n){
+    if(!Number.isFinite(n)) return 'NaN';
+    const hex = Math.abs(n).toString(16).toUpperCase();
+    return (n < 0 ? '-0x' : '0x') + hex;
+  }
+
+  function convertHex(){
+    clearHexError();
+    const raw = hexInput.value.trim();
+    if(raw === ''){ 
+      if (hexResult) hexResult.textContent = 'কিছুই লেখা নেই — ইনপুট দিন।'; 
+      return; 
+    }
+
+    const hexMatch = raw.match(/^(-?)0[xX]([0-9a-fA-F]+)$/);
+    if(hexMatch){
+      try{
+        const sign = hexMatch[1] === '-' ? -1 : 1;
+        const digits = hexMatch[2];
+        const val = parseInt(digits, 16);
+        if(Number.isNaN(val)) throw new Error('Invalid hex');
+        if (hexResult) hexResult.textContent = `${sign * val}`;
+        return;
+      }catch(e){ showHexError('হেক্স পার্সিং এ সমস্যা: ' + e.message); return; }
+    }
+
+    const decMatch = raw.match(/^([+-]?\d+)$/);
+    if(decMatch){
+      try{
+        const n = parseInt(raw, 10);
+        if(Number.isNaN(n)) throw new Error('Invalid decimal');
+        if (hexResult) hexResult.textContent = formatHex(n);
+        return;
+      }catch(e){ showHexError('ডেসিমাল পার্সিং এ সমস্যা: ' + e.message); return; }
+    }
+
+    showHexError('অবৈধ ইনপুট — ইনপুট উচিত: 0xA2 (hex) বা 162 (decimal)');
+  }
+
+  if (convertBtn) {
+    convertBtn.addEventListener('click', convertHex);
+  }
+  
+  if (hexInput) {
+    hexInput.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') convertHex(); });
+  }
+  
+  if (clearHexBtn) {
+    clearHexBtn.addEventListener('click', ()=>{ 
+      if (hexInput) hexInput.value = ''; 
+      if (hexResult) hexResult.textContent = 'রেজাল্ট এখানে দেখাবে।'; 
+      clearHexError(); 
+      if (hexInput) hexInput.focus(); 
+    });
+  }
+
+  if (copyHexBtn) {
+    copyHexBtn.addEventListener('click', async ()=>{
+      const txt = hexResult ? hexResult.textContent || '' : '';
+      try{
+        await navigator.clipboard.writeText(txt);
+        copyHexBtn.textContent = 'Copied!';
+        setTimeout(()=> copyHexBtn.textContent = 'Copy Result', 1200);
+      }catch(e){ copyHexBtn.textContent = 'Copy failed'; setTimeout(()=> copyHexBtn.textContent = 'Copy Result', 1200); }
+    });
+  }
+});
+</script>
+</body>
+</html>
